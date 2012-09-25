@@ -29,39 +29,28 @@
 #include "fmpz_vec.h"
 #include "fmpz_poly.h"
 
+#define TYPE \
+    fmpz
+#define SET(x, y) \
+    fmpz_set((x), (y))
+#define ADD(x, y, z) \
+    fmpz_add((x), (y), (z))
+#define VEC_INIT(len) \
+    _fmpz_vec_init(len)
+#define VEC_CLEAR(v, len) \
+    _fmpz_vec_clear((v), (len))
+#define VEC_SCALAR_MUL(v, w, len, c) \
+    _fmpz_vec_scalar_mul_fmpz((v), (w), (len), (c))
+#define POLY_MUL(rop, op1, len1, op2, len2) \
+    _fmpz_poly_mul((rop), (op1), (len1), (op2), (len2))
+#define POLY_EVALUATE(rop, op, len, c) \
+    _fmpz_poly_evaluate_fmpz((rop), (op), (len), (c))
+
 void
 _fmpz_poly_compose_horner(fmpz * res, const fmpz * poly1, long len1, 
                                       const fmpz * poly2, long len2)
 {
-    if (len1 == 1)
-    {
-        fmpz_set(res, poly1);
-    }
-    else
-    {
-        const long alloc = (len1 - 1) * (len2 - 1) + 1;
-
-        long i = len1 - 1, lenr;
-        fmpz * t = _fmpz_vec_init(alloc);
-        
-        /*
-           Perform the first two steps as one, 
-             "res = a(m) * poly2 + a(m-1)".
-         */
-        {
-            lenr = len2;
-            _fmpz_vec_scalar_mul_fmpz(res, poly2, len2, poly1 + i);
-            i--;
-            fmpz_add(res, res, poly1 + i);
-        }
-        while (i--)
-        {
-            _fmpz_poly_mul(t, res, lenr, poly2, len2);
-            lenr += len2 - 1;
-            _fmpz_poly_add(res, t, lenr, poly1 + i, 1);
-        }
-        _fmpz_vec_clear(t, alloc);
-    }
+    #include "generics/poly_compose_horner.in"
 }
 
 void

@@ -20,42 +20,32 @@
 /******************************************************************************
 
     Copyright (C) 2008, 2009 William Hart
+    Copyright (C) 2012 Sebastian Pancratz
    
 ******************************************************************************/
 
-#include <mpir.h>
-#include "flint.h"
-#include "fmpz.h"
 #include "fmpz_poly.h"
 
-void
-_fmpz_poly_add(fmpz * res, const fmpz * poly1, long len1, const fmpz * poly2,
-               long len2)
+#define SET(x, y) \
+    fmpz_set((x), (y))
+#define VEC_ADD(v, v1, v2, len) \
+    _fmpz_vec_add((v), (v1), (v2), (len))
+
+void _fmpz_poly_add(fmpz * res, const fmpz * poly1, long len1, 
+                                const fmpz * poly2, long len2)
 {
-    long i, min = FLINT_MIN(len1, len2);
-
-    for (i = 0; i < min; i++)   /* add up to the length of the shorter poly */
-        fmpz_add(res + i, poly1 + i, poly2 + i);
-
-    if (poly1 != res)           /* copy any remaining coefficients from poly1 */
-        for (i = min; i < len1; i++)
-            fmpz_set(res + i, poly1 + i);
-
-    if (poly2 != res)           /* copy any remaining coefficients from poly2 */
-        for (i = min; i < len2; i++)
-            fmpz_set(res + i, poly2 + i);
+    #include "generics/poly_add.in"
 }
 
-void
-fmpz_poly_add(fmpz_poly_t res, const fmpz_poly_t poly1,
-              const fmpz_poly_t poly2)
+void fmpz_poly_add(fmpz_poly_t res, const fmpz_poly_t poly1,
+                                    const fmpz_poly_t poly2)
 {
-    long max = FLINT_MAX(poly1->length, poly2->length);
+    const long max = FLINT_MAX(poly1->length, poly2->length);
 
     fmpz_poly_fit_length(res, max);
 
-    _fmpz_poly_add(res->coeffs, poly1->coeffs, poly1->length, poly2->coeffs,
-                   poly2->length);
+    _fmpz_poly_add(res->coeffs, poly1->coeffs, poly1->length, 
+                                poly2->coeffs, poly2->length);
 
     _fmpz_poly_set_length(res, max);
     _fmpz_poly_normalise(res);  /* there may have been cancellation */

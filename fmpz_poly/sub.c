@@ -20,30 +20,23 @@
 /******************************************************************************
 
     Copyright (C) 2008, 2009 William Hart
+    Copyright (C) 2012 Sebastian Pancratz
 
 ******************************************************************************/
 
-#include <mpir.h>
-#include "flint.h"
-#include "fmpz.h"
 #include "fmpz_poly.h"
 
-void
-_fmpz_poly_sub(fmpz * res, const fmpz * poly1, long len1, const fmpz * poly2,
-               long len2)
+#define SET(x, y) \
+    fmpz_set((x), (y))
+#define NEG(x, y) \
+    fmpz_neg((x), (y))
+#define VEC_SUB(v, v1, v2, len) \
+    _fmpz_vec_sub((v), (v1), (v2), (len))
+
+void _fmpz_poly_sub(fmpz * res, const fmpz * poly1, long len1, 
+                                const fmpz * poly2, long len2)
 {
-    long i, min = FLINT_MIN(len1, len2);
-
-    for (i = 0; i < min; i++)   /* subtract up to the length of the shorter poly */
-        fmpz_sub(res + i, poly1 + i, poly2 + i);
-
-    if (poly1 != res)           /* copy any remaining coefficients from poly1 */
-        for (i = min; i < len1; i++)
-            fmpz_set(res + i, poly1 + i);
-
-    /* careful, it is *always* necessary to negate coeffs from poly2, even if this is already res */
-    for (i = min; i < len2; i++)
-        fmpz_neg(res + i, poly2 + i);
+    #include "generics/poly_sub.in"
 }
 
 void

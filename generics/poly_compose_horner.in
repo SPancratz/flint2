@@ -1,0 +1,68 @@
+/*
+    Implements polynomial composition via Horner's method:
+
+        POLY_COMPOSE_HORNER(res, poly1, len1, poly2, len2)
+
+    Requires the following macros:
+
+        * TYPE
+        * SET(x, y)
+        * ADD(x, y, z)
+        * VEC_INIT(len)
+        * VEC_CLEAR(v, len)
+        * VEC_SCALAR_MUL(v, w, len, c)
+        * POLY_MUL(rop, op1, len1, op2, len2)
+        * POLY_EVALUATE(rop, op, len, c)
+ */
+
+if (len1 == 1)
+{
+    SET(res + 0, poly1 + 0);
+}
+else if (len2 == 1)
+{
+    POLY_EVALUATE(res + 0, poly1, len1, poly2 + 0);
+}
+else if (len1 == 2)
+{
+    VEC_SCALAR_MUL(res, poly2, len2,poly1 + 1);
+    ADD(res + 0, res + 0, poly1 + 0);
+}
+else
+{
+    const long alloc = (len1 - 1) * (len2 - 1) + 1;
+    long i = len1 - 1, lenr = len2;
+    TYPE *t, *t1, *t2;
+    t = VEC_INIT(alloc);
+
+    if (len1 % 2 == 0)
+    {
+        t1 = res;
+        t2 = t;
+    }
+    else
+    {
+        t1 = t;
+        t2 = res;
+    }
+
+    /*  Perform the first two steps as one, 
+        "res = a(m) * poly2 + a(m-1)".      */
+    {
+        VEC_SCALAR_MUL(t1, poly2, len2, poly1 + i);
+        i--;
+        ADD(t1 + 0, t1 + 0, poly1 + i);
+    }
+    while (i--)
+    {
+        POLY_MUL(t2, t1, lenr, poly2, len2);
+        lenr += len2 - 1;
+        {
+            void *t_ = t1;
+            t1 = t2;
+            t2 = t_;
+        }
+        ADD(t1 + 0, t1 + 0, poly1 + i);
+    }
+    VEC_CLEAR(t, alloc);
+}

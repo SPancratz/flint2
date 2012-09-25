@@ -27,57 +27,26 @@
 #include "nmod_poly.h"
 #include "ulong_extras.h"
 
+#define TYPE mp_limb_t
+#define SET(x, y) *(x) = *(y)
+#define ADD(x, y, z) \
+    *(x) = n_addmod(*(y), *(z), mod.n)
+#define VEC_INIT(len) \
+    _nmod_vec_init(len)
+#define VEC_CLEAR(v, len) \
+    _nmod_vec_clear(v)
+#define VEC_SCALAR_MUL(v, w, len, c) \
+    _nmod_vec_scalar_mul_nmod((v), (w), (len), *(c), mod)
+#define POLY_MUL(rop, op1, len1, op2, len2) \
+    _nmod_poly_mul((rop), (op1), (len1), (op2), (len2), mod)
+#define POLY_EVALUATE(rop, op, len, c) \
+    *(rop) = _nmod_poly_evaluate_nmod((op), (len), *(c), mod)
+
 void 
 _nmod_poly_compose_horner(mp_ptr res, mp_srcptr poly1, long len1, 
                                       mp_srcptr poly2, long len2, nmod_t mod)
 {
-    if (len1 == 1)
-    {
-        res[0] = poly1[0];
-    }
-    else if (len2 == 1)
-    {
-        res[0] = _nmod_poly_evaluate_nmod(poly1, len1, poly2[0], mod);
-    }
-    else if (len1 == 2)
-    {
-        _nmod_vec_scalar_mul_nmod(res, poly2, len2, poly1[1], mod);
-        res[0] = n_addmod(res[0], poly1[0], mod.n);
-    }
-    else
-    {
-        const long alloc = (len1 - 1) * (len2 - 1) + 1;
-        long i = len1 - 1, lenr = len2;
-        mp_limb_t *t, *t1, *t2;
-        t = _nmod_vec_init(alloc);
-
-        if (len1 % 2 == 0)
-        {
-            t1 = res;
-            t2 = t;
-        }
-        else
-        {
-            t1 = t;
-            t2 = res;
-        }
-
-        /*  Perform the first two steps as one, 
-            "res = a(m) * poly2 + a(m-1)".      */
-        {
-            _nmod_vec_scalar_mul_nmod(t1, poly2, len2, poly1[i], mod);
-            i--;
-            t1[0] = n_addmod(t1[0], poly1[i], mod.n);
-        }
-        while (i--)
-        {
-            _nmod_poly_mul(t2, t1, lenr, poly2, len2, mod);
-            lenr += len2 - 1;
-            MP_PTR_SWAP(t1, t2);
-            t1[0] = n_addmod(t1[0], poly1[i], mod.n);
-        }
-        _nmod_vec_clear(t);
-    }
+    #include "generics/poly_compose_horner.in"
 }
 
 void nmod_poly_compose_horner(nmod_poly_t res, 
