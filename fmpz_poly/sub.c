@@ -26,24 +26,17 @@
 
 #include "fmpz_poly.h"
 
-#define SET(x, y) \
-    fmpz_set((x), (y))
-#define NEG(x, y) \
-    fmpz_neg((x), (y))
-#define VEC_SUB(v, v1, v2, len) \
-    _fmpz_vec_sub((v), (v1), (v2), (len))
-
 void _fmpz_poly_sub(fmpz * res, const fmpz * poly1, long len1, 
                                 const fmpz * poly2, long len2)
 {
-    #include "generics/poly_sub.in"
+    #include "templates/fmpz_poly.h"
+    #include "templates/poly_sub.in"
 }
 
-void
-fmpz_poly_sub(fmpz_poly_t res, const fmpz_poly_t poly1,
-              const fmpz_poly_t poly2)
+void fmpz_poly_sub(fmpz_poly_t res, const fmpz_poly_t poly1,
+                                    const fmpz_poly_t poly2)
 {
-    long max = FLINT_MAX(poly1->length, poly2->length);
+    const long max = FLINT_MAX(poly1->length, poly2->length);
 
     fmpz_poly_fit_length(res, max);
 

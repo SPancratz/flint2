@@ -27,15 +27,11 @@
 
 #include "nmod_poly.h"
 
-#define SET(x, y) \
-    *(x) = *(y)
-#define VEC_ADD(v, v1, v2, len) \
-    _nmod_vec_add((v), (v1), (v2), (len), mod)
-
 void _nmod_poly_add(mp_ptr res, mp_srcptr poly1, long len1, 
                                 mp_srcptr poly2, long len2, nmod_t mod)
 {
-    #include "generics/poly_add.in"
+    #include "templates/nmod_poly.h"
+    #include "templates/poly_add.in"
 }
 
 void nmod_poly_add(nmod_poly_t res, const nmod_poly_t poly1,

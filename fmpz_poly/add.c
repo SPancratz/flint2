@@ -26,15 +26,11 @@
 
 #include "fmpz_poly.h"
 
-#define SET(x, y) \
-    fmpz_set((x), (y))
-#define VEC_ADD(v, v1, v2, len) \
-    _fmpz_vec_add((v), (v1), (v2), (len))
-
 void _fmpz_poly_add(fmpz * res, const fmpz * poly1, long len1, 
                                 const fmpz * poly2, long len2)
 {
-    #include "generics/poly_add.in"
+    #include "templates/fmpz_poly.h"
+    #include "templates/poly_add.in"
 }
 
 void fmpz_poly_add(fmpz_poly_t res, const fmpz_poly_t poly1,

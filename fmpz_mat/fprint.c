@@ -31,14 +31,14 @@
 #include "fmpz_mat.h"
 
 /*
-    The macros xxx_putc, xxx_printf, and xxx_fmpz_print are provided 
+    The templates xxx_putc, xxx_printf, and xxx_fmpz_print are provided 
     as wrappers to handle return values and error conditions.  While 
     this is not exactly pretty, it improves the readability of the 
     functions fmpz_mat_fprint and fmpz_mat_fprint_pretty.  Moreover, 
     if we later want to improve the handling of returns values, e.g. 
     to return the number of characters printed, this will be easier.
 
-    The macros are undef'd at the end of the file.
+    The templates are undef'd at the end of the file.
  */
 
 #define xxx_putc(c)        \

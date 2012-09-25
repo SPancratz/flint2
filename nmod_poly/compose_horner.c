@@ -27,26 +27,12 @@
 #include "nmod_poly.h"
 #include "ulong_extras.h"
 
-#define TYPE mp_limb_t
-#define SET(x, y) *(x) = *(y)
-#define ADD(x, y, z) \
-    *(x) = n_addmod(*(y), *(z), mod.n)
-#define VEC_INIT(len) \
-    _nmod_vec_init(len)
-#define VEC_CLEAR(v, len) \
-    _nmod_vec_clear(v)
-#define VEC_SCALAR_MUL(v, w, len, c) \
-    _nmod_vec_scalar_mul_nmod((v), (w), (len), *(c), mod)
-#define POLY_MUL(rop, op1, len1, op2, len2) \
-    _nmod_poly_mul((rop), (op1), (len1), (op2), (len2), mod)
-#define POLY_EVALUATE(rop, op, len, c) \
-    *(rop) = _nmod_poly_evaluate_nmod((op), (len), *(c), mod)
-
 void 
 _nmod_poly_compose_horner(mp_ptr res, mp_srcptr poly1, long len1, 
                                       mp_srcptr poly2, long len2, nmod_t mod)
 {
-    #include "generics/poly_compose_horner.in"
+    #include "templates/nmod_poly.h"
+    #include "templates/poly_compose_horner.in"
 }
 
 void nmod_poly_compose_horner(nmod_poly_t res, 

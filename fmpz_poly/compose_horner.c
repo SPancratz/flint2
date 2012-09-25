@@ -29,28 +29,12 @@
 #include "fmpz_vec.h"
 #include "fmpz_poly.h"
 
-#define TYPE \
-    fmpz
-#define SET(x, y) \
-    fmpz_set((x), (y))
-#define ADD(x, y, z) \
-    fmpz_add((x), (y), (z))
-#define VEC_INIT(len) \
-    _fmpz_vec_init(len)
-#define VEC_CLEAR(v, len) \
-    _fmpz_vec_clear((v), (len))
-#define VEC_SCALAR_MUL(v, w, len, c) \
-    _fmpz_vec_scalar_mul_fmpz((v), (w), (len), (c))
-#define POLY_MUL(rop, op1, len1, op2, len2) \
-    _fmpz_poly_mul((rop), (op1), (len1), (op2), (len2))
-#define POLY_EVALUATE(rop, op, len, c) \
-    _fmpz_poly_evaluate_fmpz((rop), (op), (len), (c))
 
 void
 _fmpz_poly_compose_horner(fmpz * res, const fmpz * poly1, long len1, 
                                       const fmpz * poly2, long len2)
 {
-    #include "generics/poly_compose_horner.in"
+    #include "templates/poly_compose_horner.in"
 }
 
 void

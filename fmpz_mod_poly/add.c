@@ -47,7 +47,7 @@ void _fmpz_mod_poly_add(fmpz *res, const fmpz *poly1, long len1,
 void fmpz_mod_poly_add(fmpz_mod_poly_t res, 
                        const fmpz_mod_poly_t poly1, const fmpz_mod_poly_t poly2)
 {
-    long max = FLINT_MAX(poly1->length, poly2->length);
+    const long max = FLINT_MAX(poly1->length, poly2->length);
 
     fmpz_mod_poly_fit_length(res, max);
 
