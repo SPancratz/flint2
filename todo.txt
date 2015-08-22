@@ -175,6 +175,9 @@ fmpq_poly
 
 * Add pow_trunc
 
+* Add gcdinv
+
+* Add discriminant
 
 fmpz_mod_poly
 -------------
@@ -288,6 +291,16 @@ fmpz_mat
 * Maybe simplify the interface for row reduction by guaranteeing
   that the denominator is the determinant.
 
+fmpz_lll
+--------
+
+* Improve the wrapper strategy, if possible.
+
+* Add an mpf version of is_reduced functions so that the dependency on MPFR
+  can be removed.
+
+* Componentize the is_reduced code so that the R computed during LLL can be
+  reused.
 
 nmod_mat
 --------
@@ -358,4 +371,25 @@ padic
   perhaps in the form of examples?
 
 * Implement padic_val_fac for generic inputs
+
+mpf_vec/mat
+-----------
+
+* _mpf_vec_approx_equal uses the bizarre mpf notion of equal; it should
+  be either renamed equal_bits or the absolute value of the difference
+  should be compared with zero
+
+* The conditions used in mpf_mat_qr/gso (similarly for d_mat module) work, but
+  don't match those used in the algorithm in the paper referenced in the docs.
+  This is possibly because mpf doesn't do exact rounding. The tests could
+  probably be improved.
+
+d_mat
+-----
+
+* d_mat_transpose tries to be clever with the cache, but it could use L1 sized
+blocks and optimise for sequential reading/writing. It could also handle 
+in-place much more efficiently.
+
+* d_mat_is_reduced doesn't seem to make any guarantees about reducedness, just approximately checks the Lovasz conditions in double arithmetic. I think this is superceded now and can be removed. It is not used anywhere.
 

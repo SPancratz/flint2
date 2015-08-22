@@ -26,6 +26,12 @@
 #ifndef DOUBLE_EXTRAS_H
 #define DOUBLE_EXTRAS_H
 
+#ifdef DOUBLE_EXTRAS_INLINES_C
+#define DOUBLE_EXTRAS_INLINE FLINT_DLL
+#else
+#define DOUBLE_EXTRAS_INLINE static __inline__
+#endif
+
 #undef ulong
 #define ulong ulongxx /* interferes with system includes */
 #include <math.h>
@@ -45,10 +51,14 @@
 #define D_INF HUGE_VAL
 #define D_NAN (HUGE_VAL - HUGE_VAL)
 
-double d_randtest(flint_rand_t state);
+FLINT_DLL double d_randtest(flint_rand_t state);
 
-static __inline__ double
-d_polyval(const double * poly, int len, double x)
+FLINT_DLL double d_randtest_signed(flint_rand_t state, slong minexp, slong maxexp);
+
+FLINT_DLL double d_randtest_special(flint_rand_t state, slong minexp, slong maxexp);
+
+DOUBLE_EXTRAS_INLINE
+double d_polyval(const double * poly, int len, double x)
 {
     double t;
     int i;
@@ -59,7 +69,11 @@ d_polyval(const double * poly, int len, double x)
     return t;
 }
 
-double d_lambertw(double x);
+FLINT_DLL double d_lambertw(double x);
+
+FLINT_DLL int d_is_nan(double x);
+
+FLINT_DLL double d_log2(double x);
 
 #ifdef __cplusplus
 }

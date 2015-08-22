@@ -57,14 +57,24 @@ by DFG Priority program SPP1489)
 $\bullet$ Lina Kulakova --  factorisation for polynomials over $\F_p$ for large
 $p$ (Google Summer of Code 2012)
 
+$\bullet$ Abhinav Baid -- LLL implementation, Ogita, Rump, Oishi dot product,
+Villard algorithm for LLL certification, Schwarz-Rutishauser algorithms for GSO
+and QR-decomposition (Google Summer of Code 2014)
+
+$\bullet$ Curtis Bright -- Mentoring/planning of LLL implementation, numerous 
+patches including 32 bit support
+ 
+$\bullet$ Alex Best -- Hermite Normal Form implementation including the
+Pernet-Stein algorithm and Smith Normal Form implementation including the
+Iliopoulos and Kannen-Bachem algorithms. Numerous improvements to nullspace, 
+rref and rank computations (Google Summer of Code 2014)
+
 $\bullet$ Thomas DuBuisson -- logical ops for fmpz module, patches to the build
 system
 
 $\bullet$ Jean-Pierre Flori -- many build system patches and Sage integration
 
 $\bullet$ Frithjof Schulze -- some fmpz functions and various patches
-
-$\bullet$ Curtis Bright -- numerous patches including 32 bit support
 
 $\bullet$ Daniel Woodhouse -- Contributed an implementation of multivariate
 multiplication over $\Z/n\Z$ and used this to implement a fast ``saturation''
@@ -95,6 +105,35 @@ $\bullet$ Peter Shrimpton -- Wrote code for a basic prime sieve,
 Pocklington-Lehmer, Lucas, Fibonacci, BSPW and $n-1$ primality tests and a
 Weiferich prime search. (Funded by the Nuffield Foundation)
 
+$\bullet$ Brian Gladman -- MSVC support
+
+$\bullet$ Dana Jacobsen -- test BPSW primality code up to $2^64$ against
+Feitma's tables and sped up and corrected \code{n_is_prime} and
+\code{n_is_probabprime}. Improvements to \code{n_nextprime} and
+\code{n_isprime}.
+
+$\bullet$ Anubhav Srivastava contributed horizontal and vertical concatenation
+of matrices over $\mathbb{Z}$ and an implementation of the Bodrato matrix 
+squaring algorithm.
+
+$\bullet$ Dharak Kharod and Prabhdeep Singh Walia both independently 
+contributed matrix content.
+
+$\bullet$ Alena Sergeicheva contributed a patch to the build system for
+individual file testing and also contributed numerous matrix concatenation 
+functions.
+
+$\bullet$ Kushagra Singh contributed fast cube root and nth root code for word
+sized integers, including magic number, Newton iteration, Kahan iteration and
+Chebyshev approximation code.
+
+$\bullet$ Andreas Enge help with a port to MIPS64.
+
+$\bullet$ Tommy Hofmann supplied some inline functions.
+
+$\bullet$ Ashish Kedia contributed an implementation of the Paterson-Stockmeyer
+algorithm
+
 $\bullet$ Patches and bug reports have been made by Michael Abshoff, 
 Didier Deshommes, Craig Citro, Timothy Abbot, Carl Witty, Gonzalo Tornaria,
 Jaap Spies, Kiran Kedlaya, William Stein, Kate Minola, Didier Deshommes, Robert
@@ -102,7 +141,8 @@ Bradshaw, Serge Torres, Dan Grayson, Martin Lee, Bob Smith, Antony Vennard,
 Fr\'{e}d\'{e}ric Chyzak, Julien Puydt, Dana Jacobsen, Michael Jacobson Jr.,
 Mike Stillman, Jan Englehardt, Jean-Pierre Flori, Jeroen Demeyer, Shi Bai,
 Qingwen Guan, Frithjof Schulze, Robert Baillie, Oleksandr Motsak, Hans
-Schoenemann, Janko Boehm, Ahmed Soliman and others.
+Schoenemann, Janko Boehm, Ahmed Soliman, Francois Bissey, Anton Mellit, Daniel
+Roche, Denis Kryskov, Vladimir Glazachev, Daniel Fabian, Julien Ospald, mgkurtz, Max Goldfar, Vincent Delecroix and others.
 
 $\bullet$ In addition Michael Abshoff, William Stein and Robert Bradshaw have
 contributed to the build system of FLINT.

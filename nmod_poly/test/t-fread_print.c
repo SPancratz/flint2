@@ -30,16 +30,14 @@
 #include "nmod_poly.h"
 #include "ulong_extras.h"
 
-#if !defined (__WIN32) && !defined (__CYGWIN__)
-
 int
 main(void)
 {
     int i, result, r1;
     FLINT_TEST_INIT(state);
     
-
     flint_printf("fread_print....");
+#if !defined( _MSC_VER )
     fflush(stdout);
 
     /* Check reading and writing to a file */
@@ -90,17 +88,8 @@ main(void)
     FLINT_TEST_CLEANUP(state);
     
     flint_printf("PASS\n");
+#else
+    flint_printf("SKIPPED\n");
+#endif
     return 0;
 }
-
-#else
-
-int main(void)
-{
-    flint_printf("print/ read....");
-    fflush(stdout);
-    flint_printf("SKIPPED\n");
-    return EXIT_SUCCESS;
-}
-
-#endif

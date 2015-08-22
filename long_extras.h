@@ -26,6 +26,12 @@
 #ifndef LONG_EXTRAS_H
 #define LONG_EXTRAS_H
 
+#ifdef LONG_EXTRAS_INLINES_C
+#define LONG_EXTRAS_INLINE FLINT_DLL
+#else
+#define LONG_EXTRAS_INLINE static __inline__
+#endif
+
 #include <gmp.h>
 #include "flint.h"
 
@@ -35,15 +41,15 @@
 
 /* Properties ****************************************************************/
 
-size_t z_sizeinbase(slong n, int b);
+FLINT_DLL size_t z_sizeinbase(slong n, int b);
 
 /* Randomisation  ************************************************************/
 
-mp_limb_signed_t z_randtest(flint_rand_t state);
+FLINT_DLL mp_limb_signed_t z_randtest(flint_rand_t state);
 
-mp_limb_signed_t z_randtest_not_zero(flint_rand_t state);
+FLINT_DLL mp_limb_signed_t z_randtest_not_zero(flint_rand_t state);
 
-mp_limb_signed_t z_randint(flint_rand_t state, mp_limb_t limit);
+FLINT_DLL mp_limb_signed_t z_randint(flint_rand_t state, mp_limb_t limit);
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,7 @@
 QUIET_CC  = @echo '   ' CC  ' ' $@;
 
 AT=@
+comma=,
 
 SOURCES = $(wildcard *.c)
 
@@ -12,8 +13,14 @@ OBJS = $(patsubst %.c, $(BUILD_DIR)/$(MOD_DIR)_%.o, $(SOURCES))
 LOBJS = $(patsubst %.c, $(BUILD_DIR)/%.lo, $(SOURCES))
 MOD_LOBJ = $(BUILD_DIR)/../$(MOD_DIR).lo
 
-TEST_SOURCES = $(wildcard test/*.c)
-TESTXX_SOURCES = $(wildcard test/*.cpp)
+ifndef USER_SET_TESTS
+	TEST_SOURCES = $(wildcard test/*.c)
+	TESTXX_SOURCES = $(wildcard test/*.cpp)
+else
+	TL = $(subst $(comma), ,$(USER_SET_TESTS))
+	TEST_SOURCES = $(foreach test, $(TL), $(wildcard test/t-$(test).c))
+	TESTXX_SOURCES = $(foreach test, $(TL), $(wildcard test/t-$(test).cpp))
+endif
 
 PROF_SOURCES = $(wildcard profile/*.c)
 
@@ -41,7 +48,7 @@ profile: $(PROFS)
 -include $(patsubst %, %.d, $(PROFS))
 
 $(BUILD_DIR)/profile/%$(EXEEXT): profile/%.c $(BUILD_DIR)/../profiler.o
-	$(QUIET_CC) $(CC) $(ABI_FLAG) -O2 -std=c99 -g $(INCS) $< $(BUILD_DIR)/../profiler.o -o $@ $(LIBS)  -MMD -MP -MF $@.d -MT "$@" -MT "$@.d"
+	$(QUIET_CC) $(CC) $(CFLAGS) -std=gnu99 $(INCS) $< $(BUILD_DIR)/../profiler.o -o $@ $(LIBS)  -MMD -MP -MF $@.d -MT "$@" -MT "$@.d"
 
 tune: $(TUNE_SOURCES) $(HEADERS)
 	$(AT)$(foreach prog, $(TUNE), $(CC) $(CFLAGS) $(INCS) $(prog).c -o $(BUILD_DIR)/$(prog) $(LIBS) || exit $$?;)

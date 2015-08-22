@@ -200,6 +200,10 @@ void fmpz_poly_truncate(fmpz_poly_t poly, slong newlen)
     is truncated to have the given length.  Discarded coefficients are not 
     necessarily set to zero.
 
+void fmpz_poly_set_trunc(fmpz_poly_t res, const fmpz_poly_t poly, slong n)
+
+    Sets \code{res} to a copy of \code{poly}, truncated to length \code{n}.
+
 *******************************************************************************
 
     Randomisation
@@ -311,6 +315,12 @@ int fmpz_poly_equal(const fmpz_poly_t poly1, const fmpz_poly_t poly2)
     Returns $1$ if \code{poly1} is equal to \code{poly2}, otherwise 
     returns $0$.  The polynomials are assumed to be normalised.
 
+int fmpz_poly_equal_trunc(const fmpz_poly_t poly1, 
+                                              const fmpz_poly_t poly2, slong n)
+
+    Return $1$ if \code{poly1} and \code{poly2}, notionally truncated to
+    length $n$ are equal, otherwise return $0$.
+
 int fmpz_poly_is_zero(const fmpz_poly_t poly)
 
     Returns $1$ if the polynomial is zero and $0$ otherwise.
@@ -325,6 +335,11 @@ int fmpz_poly_is_unit(const fmpz_poly_t poly)
 
     Returns $1$ is the polynomial is the constant polynomial $\pm 1$, 
     and $0$ otherwise.
+
+int fmpz_poly_is_x(const fmpz_poly_t poly)
+
+    Returns $1$ if the polynomial is the degree $1$ polynomial $x$, and $0$ 
+    otherwise.
 
 *******************************************************************************
 
@@ -344,6 +359,12 @@ void fmpz_poly_add(fmpz_poly_t res, const fmpz_poly_t poly1,
 
     Sets \code{res} to the sum of \code{poly1} and \code{poly2}.
 
+void fmpz_poly_add_series(fmpz_poly_t res, const fmpz_poly_t poly1, 
+                                              const fmpz_poly_t poly2, ulong n)
+
+    Notionally truncate \code{poly1} and \code{poly2} to length $n$ and then
+    set \code{res} to the sum.
+
 void _fmpz_poly_sub(fmpz * res, const fmpz * poly1, slong len1, 
                                                 const fmpz * poly2, slong len2)
 
@@ -355,6 +376,12 @@ void fmpz_poly_sub(fmpz_poly_t res, const fmpz_poly_t poly1,
                                                        const fmpz_poly_t poly2)
 
     Sets \code{res} to \code{poly1} minus \code{poly2}.
+
+void fmpz_poly_sub_series(fmpz_poly_t res, const fmpz_poly_t poly1, 
+                                              const fmpz_poly_t poly2, ulong n)
+
+    Notionally truncate \code{poly1} and \code{poly2} to length $n$ and then
+    set \code{res} to the sum.
 
 void fmpz_poly_neg(fmpz_poly_t res, const fmpz_poly_t poly)
 
@@ -391,12 +418,12 @@ void fmpz_poly_scalar_mul_2exp(fmpz_poly_t poly1, fmpz_poly_t poly2, ulong exp)
 void fmpz_poly_scalar_addmul_fmpz(fmpz_poly_t poly1, const fmpz_poly_t poly2, 
                                                                 const fmpz_t x)
 
-    Sets \code{poly} to \code{poly1 + x * poly2}.
+    Sets \code{poly1} to \code{poly1 + x * poly2}.
 
 void fmpz_poly_scalar_submul_fmpz(fmpz_poly_t poly1, const fmpz_poly_t poly2, 
                                                                 const fmpz_t x)
 
-    Sets \code{poly} to \code{poly1 - x * poly2}.
+    Sets \code{poly1} to \code{poly1 - x * poly2}.
 
 void fmpz_poly_scalar_fdiv_fmpz(fmpz_poly_t poly1, 
                                        const fmpz_poly_t poly2, const fmpz_t x)
@@ -1240,6 +1267,52 @@ void fmpz_poly_lcm(fmpz_poly_t res, const fmpz_poly_t poly1,
     \end{equation*}
     holds up to sign.
 
+void _fmpz_poly_resultant_modular(fmpz_t res, const fmpz * poly1, slong len1, 
+                                               const fmpz * poly2, slong len2)
+
+    Sets \code{res} to the resultant of \code{(poly1, len1)} and 
+    \code{(poly2, len2)}, assuming that \code{len1 >= len2 > 0}. 
+
+void fmpz_poly_resultant_modular(fmpz_t res, const fmpz_poly_t poly1,
+                                                      const fmpz_poly_t poly2)
+
+    Computes the resultant of \code{poly1} and \code{poly2}.
+
+    For two non-zero polynomials $f(x) = a_m x^m + \dotsb + a_0$ and 
+    $g(x) = b_n x^n + \dotsb + b_0$ of degrees $m$ and $n$, the resultant 
+    is defined to be 
+    \begin{equation*}
+        a_m^n b_n^m \prod_{(x, y) : f(x) = g(y) = 0} (x - y).
+    \end{equation*}
+    For convenience, we define the resultant to be equal to zero if either 
+    of the two polynomials is zero.
+
+    This function uses the modular algorithm described 
+    in~\citep{Col1971}.
+
+void _fmpz_poly_resultant_euclidean(fmpz_t res, const fmpz * poly1, slong len1,
+                                      const fmpz * poly2, slong len2)
+
+    Sets \code{res} to the resultant of \code{(poly1, len1)} and 
+    \code{(poly2, len2)}, assuming that \code{len1 >= len2 > 0}.
+
+void fmpz_poly_resultant_euclidean(fmpz_t res, const fmpz_poly_t poly1, 
+                                     const fmpz_poly_t poly2)
+
+    Computes the resultant of \code{poly1} and \code{poly2}.
+
+    For two non-zero polynomials $f(x) = a_m x^m + \dotsb + a_0$ and 
+    $g(x) = b_n x^n + \dotsb + b_0$ of degrees $m$ and $n$, the resultant 
+    is defined to be 
+    \begin{equation*}
+        a_m^n b_n^m \prod_{(x, y) : f(x) = g(y) = 0} (x - y).
+    \end{equation*}
+    For convenience, we define the resultant to be equal to zero if either 
+    of the two polynomials is zero.
+
+    This function uses the algorithm described 
+    in~\citep[Algorithm~3.3.7]{Coh1996}.
+
 void _fmpz_poly_resultant(fmpz_t res, const fmpz * poly1, slong len1, 
                                       const fmpz * poly2, slong len2)
 
@@ -1260,8 +1333,25 @@ void fmpz_poly_resultant(fmpz_t res, const fmpz_poly_t poly1,
     For convenience, we define the resultant to be equal to zero if either 
     of the two polynomials is zero.
 
-    This function uses the algorithm described 
-    in~\citep[Algorithm~3.3.7]{Coh1996}.
+*******************************************************************************
+
+    Discriminant
+
+*******************************************************************************
+
+void _fmpz_poly_discriminant(fmpz_t res, const fmpz * poly, slong len)
+
+    Set \code{res} to the discriminant of \code{(poly, len)}. Assumes
+    \code{len > 1}.
+
+void fmpz_poly_discriminant(fmpz_t res, const fmpz_poly_t poly)
+
+    Set \code{res} to the discriminant of \code{poly}. We normalise the
+    discriminant so that $\operatorname{disc}(f) = (-1)^(n(n-1)/2)
+    \operatorname{res}(f, f')/\operatorname{lc}(f)$, thus
+    $\operatorname{disc}(f) = \operatorname{lc}(f)^(2n - 2) \prod_{i < j} (r_i
+    - r_j)^2$, where $\operatorname{lc}(f)$ is the leading coefficient of $f$,
+    $n$ is the degree of $f$ and $r_i$ are the roots of $f$.
 
 *******************************************************************************
 
@@ -1769,7 +1859,7 @@ void _fmpz_poly_pseudo_divrem_basecase(fmpz * Q, fmpz * R,
     Assumes that $\len(A) \geq \len(B) > 0$.  Assumes that $Q$ can fit 
     $\len(A) - \len(B) + 1$ coefficients, and that $R$ can fit $\len(A)$ 
     coefficients.  Supports aliasing of \code{(R, lenA)} and \code{(A, lenA)}. 
-    But other than this,  no aliasing of the inputs and outputs is suppported.
+    But other than this,  no aliasing of the inputs and outputs is supported.
 
     An optional precomputed inverse of the leading coefficient of $B$ from
     \code{fmpz_preinvn_init} can be supplied. Otherwise \code{inv} should be
@@ -1863,7 +1953,7 @@ void _fmpz_poly_pseudo_divrem(fmpz * Q, fmpz * R, ulong * d, const fmpz * A,
     will carry meaningful data.
 
     Supports aliasing of \code{(R, lenA)} and \code{(A, lenA)}.  But other 
-    than this, no aliasing of the inputs and outputs is suppported.
+    than this, no aliasing of the inputs and outputs is supported.
 
     An optional precomputed inverse of the leading coefficient of $B$ from
     \code{fmpz_preinvn_init} can be supplied. Otherwise \code{inv} should be
@@ -2177,6 +2267,19 @@ void fmpz_poly_taylor_shift_divconquer(fmpz_poly_t g, const fmpz_poly_t f,
 
     Performs the Taylor shift composing \code{f} by $x+c$.
     Uses the divide-and-conquer polynomial composition algorithm.
+
+void _fmpz_poly_taylor_shift_multi_mod(fmpz * poly, const fmpz_t c, slong n)
+
+    Performs the Taylor shift composing \code{poly} by $x+c$ in-place.
+    Uses a multimodular algorithm, distributing the computation
+    across \code{flint_get_num_threads()} threads.
+
+void fmpz_poly_taylor_shift_multi_mod(fmpz_poly_t g, const fmpz_poly_t f,
+    const fmpz_t c)
+
+    Performs the Taylor shift composing \code{f} by $x+c$.
+    Uses a multimodular algorithm, distributing the computation
+    across \code{flint_get_num_threads()} threads.
 
 void _fmpz_poly_taylor_shift(fmpz * poly, const fmpz_t c, slong n)
 
@@ -2626,7 +2729,7 @@ void fmpz_poly_hensel_lift_once(fmpz_poly_factor_t lifted_fac,
     one of highest degree.  Each term starts with a coefficient, prepended 
     with a sign, followed by the character \code{*}, followed by a variable 
     name, which must be passed as a string parameter to the function, 
-    followed by a carot \code{^} followed by a non-negative exponent.
+    followed by a caret \code{^} followed by a non-negative exponent.
 
     If the sign of the leading coefficient is positive, it is omitted. Also 
     the exponents of the degree $1$ and $0$ terms are omitted, as is the 
@@ -2756,7 +2859,7 @@ int fmpz_poly_fread_pretty(FILE *file, fmpz_poly_t poly, char **x)
                  '+', '-'     1
     \end{verbatim}
     Here, {\tt D} refers to any digit, {\tt V0} to any character which 
-    is allowed as the first character in the variable name (an alphetic 
+    is allowed as the first character in the variable name (an alphabetic 
     character), and {\tt V} to any character which is allowed in the 
     remaining part of the variable name (an alphanumeric character or 
     underscore).
@@ -3033,7 +3136,7 @@ void fmpz_poly_theta_qexp(fmpz_poly_t f, slong r, slong n)
 
     Sets $f$ to the $q$-expansion to length $n$ of the
     Jacobi theta function raised to the power $r$, i.e. $\vartheta(q)^r$
-    where $\vartheta(q) = 1 + \sum_{k=1}^{\infty} q^{k^2}$.
+    where $\vartheta(q) = 1 + 2 \sum_{k=1}^{\infty} q^{k^2}$.
 
     This function uses sparse formulas for $r = 1, 2$
     and otherwise reduces to those cases using power series arithmetic.
