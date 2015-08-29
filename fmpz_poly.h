@@ -645,6 +645,12 @@ FLINT_DLL void _fmpz_poly_discriminant(fmpz_t res, const fmpz * poly, slong len)
 
 FLINT_DLL void fmpz_poly_discriminant(fmpz_t res, const fmpz_poly_t poly);
 
+FLINT_DLL void fmpz_poly_sturm_sequence(fmpz_poly_t *seq, const fmpz_poly_t poly);
+
+FLINT_DLL int _fmpz_poly_all_roots_in_interval(fmpz *poly, slong n, fmpz const * a, fmpz const * b, fmpz *w);
+
+FLINT_DLL int fmpz_poly_all_roots_in_interval(const fmpz_poly_t poly, const fmpz_t a, const fmpz_t b);
+
 /*  Gaussian content  ********************************************************/
 
 FLINT_DLL void _fmpz_poly_content(fmpz_t res, const fmpz * poly, slong len);
