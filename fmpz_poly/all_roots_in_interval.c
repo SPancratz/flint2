@@ -47,8 +47,8 @@ int _fmpz_poly_all_roots_in_interval(fmpz *poly, slong n,
     fmpz *t1     = w + 3 * n + 6;
     fmpz *t2     = w + 3 * n + 7;
 
-    fmpz *l0 = f0 + (n - 1);
-    fmpz *l1 = f1 + (n - 2);
+    fmpz *l0;
+    fmpz *l1;
 
     fmpz *t;
 
@@ -114,6 +114,9 @@ int _fmpz_poly_all_roots_in_interval(fmpz *poly, slong n,
             c  := - f2[n-1]
             f2 := l1 * f2 + c * f1
          */
+        l0 = f0 + n;
+        l1 = f1 + n - 1;
+
         fmpz_zero(f2 + 0);
         _fmpz_vec_scalar_mul_fmpz(f2 + 1, f1, n - 1, l0);
         _fmpz_vec_scalar_submul_fmpz(f2, f0, n, l1);
@@ -136,7 +139,7 @@ int _fmpz_poly_all_roots_in_interval(fmpz *poly, slong n,
 
         /* Evaluate f2 at a and b without an explicit function call */
 
-        /* val2_a = (c*val1_a + lead1*(lead0*val1_a*a - lead1*val0_a)) // d */
+        /* val2_a = (c*val1_a + l1*(l0*val1_a*a - l1*val0_a)) // d */
         fmpz_mul(t1, val1_a, a);
         fmpz_mul(t2, l0, t1);
         fmpz_submul(t2, l1, val0_a);
@@ -145,7 +148,7 @@ int _fmpz_poly_all_roots_in_interval(fmpz *poly, slong n,
         fmpz_swap(val0_a, val1_a);
         fmpz_divexact(val1_a, t1, d);
 
-        /* val2_b = (c*val1_b + lead1*(lead0*val1_b*b - lead1*val0_b)) // d */
+        /* val2_b = (c*val1_b + l1*(l0*val1_b*b - l1*val0_b)) // d */
         fmpz_mul(t1, val1_b, b);
         fmpz_mul(t2, l0, t1);
         fmpz_submul(t2, l1, val0_b);
@@ -154,12 +157,9 @@ int _fmpz_poly_all_roots_in_interval(fmpz *poly, slong n,
         fmpz_swap(val0_b, val1_b);
         fmpz_divexact(val1_b, t1, d);
 
-        /* Rotate the polynomials, leading coefficients, and values */
+        /* Rotate the polynomials */
         _fmpz_vec_scalar_divexact_fmpz(f0, f2, n, d);
         SWAP(f0, f1);
-
-        l0 = f0 + n;
-        l1 = f1 + n - 1;
     }
 
     return 1;
