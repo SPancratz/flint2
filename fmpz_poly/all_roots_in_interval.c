@@ -56,22 +56,6 @@ int _fmpz_poly_all_roots_in_interval(fmpz *poly, slong n,
     int sgn0_b;
 
     _fmpz_vec_set(f0, poly, n);
-    _fmpz_poly_evaluate_fmpz(val0_b, f0, n, b);
-
-    /* Remove all factors of val0_b */
-    while (fmpz_is_zero(val0_b))
-    {
-        /* {t1, 2} is available */
-        fmpz_one(t1 + 1);
-        fmpz_neg(t1 + 0, b);
-
-        _fmpz_poly_divrem(f1, f2, f0, n, t1, 2);
-        SWAP(f0, f1);
-        n--;
-
-        _fmpz_poly_evaluate_fmpz(val0_b, f0, n, b);
-    }
-
     _fmpz_poly_evaluate_fmpz(val0_a, f0, n, a);
 
     /* Remove all factors of val0_a */
@@ -86,6 +70,24 @@ int _fmpz_poly_all_roots_in_interval(fmpz *poly, slong n,
         n--;
 
         _fmpz_poly_evaluate_fmpz(val0_a, f0, n, a);
+    }
+
+    _fmpz_poly_evaluate_fmpz(val0_b, f0, n, b);
+
+    /* Remove all factors of val0_b, updating val0_a */
+    fmpz_sub(c, a, b);
+    while (fmpz_is_zero(val0_b))
+    {
+        /* {t1, 2} is available */
+        fmpz_one(t1 + 1);
+        fmpz_neg(t1 + 0, b);
+
+        _fmpz_poly_divrem(f1, f2, f0, n, t1, 2);
+        SWAP(f0, f1);
+        n--;
+        fmpz_divexact(val0_a, val0_a, c);
+
+        _fmpz_poly_evaluate_fmpz(val0_b, f0, n, b);
     }
 
     if (n == 1)
